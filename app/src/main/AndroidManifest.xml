@@ -5,8 +5,11 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"
+        tools:ignore="ScopedStorage" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.CAMERA" />
 
@@ -29,6 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name=".cropper.CropFileProvider"
             android:authorities="${applicationId}.cropper.fileprovider"
@@ -36,12 +40,13 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/library_file_paths"/>
+                android:resource="@xml/library_file_paths" />
         </provider>
+
         <activity
             android:name=".cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"
-            android:exported="true"/>
+            android:exported="true"
+            android:theme="@style/Base.Theme.AppCompat" />
     </application>
 
 </manifest>
