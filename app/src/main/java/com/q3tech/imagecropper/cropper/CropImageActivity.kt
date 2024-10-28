@@ -1,6 +1,8 @@
 package com.q3tech.imagecropper.cropper
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
@@ -16,6 +18,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -45,6 +48,8 @@ open class CropImageActivity :
 
     /** Persist URI image to crop URI if specific permissions are required. */
     private var cropImageUri: Uri? = null
+
+    private val MY_CAMERA_REQUEST_CODE = 10021
 
     /** The options that were set for the crop image*/
     private lateinit var cropImageOptions: CropImageOptions
@@ -118,23 +123,6 @@ open class CropImageActivity :
         binding.cropImageView.setOnSetCropOverlayMovedListener {
             binding.imagePreview.setImageBitmap(cropImageView?.getCroppedImage())
         }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun saveBitmapToFile(bitmap: Bitmap): Uri {
-        val file = File(this.cacheDir, "cropped_image_${getCurrentTimestamp()}.png")
-        val outputStream = FileOutputStream(file)
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-        outputStream.flush()
-        outputStream.close()
-        return Uri.fromFile(file)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun getCurrentTimestamp(): String {
-        val current = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss")
-        return current.format(formatter)
     }
 
     private fun setImageToPreview(croppedImageUri: Uri?) {
@@ -225,10 +213,30 @@ open class CropImageActivity :
         }
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == MY_CAMERA_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getTmpFileUri().let { uri ->
+                    latestTmpUri = uri
+                    takePicture.launch(uri)
+                }
+            } else {
+                Toast.makeText(this, "Please enable camera permissions from app settings.", Toast.LENGTH_LONG).show()
+                requestPermissions(arrayOf(Manifest.permission.CAMERA), MY_CAMERA_REQUEST_CODE)
+                finish()
+            }
+        }
+    }
+
     private fun openCamera() {
-        getTmpFileUri().let { uri ->
-            latestTmpUri = uri
-            takePicture.launch(uri)
+        Log.e(TAG, "openCamera: triggered")
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.CAMERA), MY_CAMERA_REQUEST_CODE)
         }
     }
 
