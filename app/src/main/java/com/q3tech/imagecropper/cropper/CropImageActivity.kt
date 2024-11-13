@@ -117,7 +117,7 @@ open class CropImageActivity :
         }
 
         binding.rotateRightButton.setOnClickListener {
-            rotateImage(-cropImageOptions.rotationDegrees)
+            rotateImage(cropImageOptions.rotationDegrees)
         }
 
         binding.cropImageView.setOnSetCropOverlayMovedListener {
@@ -237,6 +237,11 @@ open class CropImageActivity :
         Log.e(TAG, "openCamera: triggered")
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(arrayOf(Manifest.permission.CAMERA), MY_CAMERA_REQUEST_CODE)
+        } else {
+            getTmpFileUri().let { uri ->
+                latestTmpUri = uri
+                takePicture.launch(uri)
+            }
         }
     }
 

@@ -3,33 +3,32 @@ package com.q3tech.imagecropper
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import android.view.View
+import android.view.ViewGroup
 import com.q3tech.imagecropper.cropper.CropImageContract
 import com.q3tech.imagecropper.cropper.CropImageContractOptions
 import com.q3tech.imagecropper.cropper.CropImageOptions
 import com.q3tech.imagecropper.cropper.CropImageView
-import com.q3tech.imagecropper.databinding.ActivityMainBinding
+import com.q3tech.imagecropper.databinding.FragmentMainBinding
 
-private const val TAG = "MainActivity"
+class MainFragment : Fragment() {
+    private val TAG = "MainFragment"
 
-class MainActivity : AppCompatActivity() {
+    private lateinit var binding: FragmentMainBinding
 
-    private lateinit var binding: ActivityMainBinding
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        // Inflate the layout for this fragment
+        binding = FragmentMainBinding.inflate(inflater)
+        return binding.root
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
-        enableEdgeToEdge()
-        setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.pickImageButton.setOnClickListener {
             startOpsFromLib()
@@ -41,10 +40,10 @@ class MainActivity : AppCompatActivity() {
             CropImageContractOptions(
                 cropImageOptions = CropImageOptions(
                     guidelines = CropImageView.Guidelines.ON,
-                    /*minCropResultWidth = 450,
+                    minCropResultWidth = 450,
                     minCropResultHeight = 650,
                     maxCropResultWidth = 900,
-                    maxCropResultHeight = 1300,*/
+                    maxCropResultHeight = 1300,
                     cropShape = CropImageView.CropShape.OVAL,
                     showCropLabel = true,
                     showCropOverlay = true,
@@ -58,7 +57,7 @@ class MainActivity : AppCompatActivity() {
     private val cropImage = registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
             val croppedImageUri = result.uriContent
-            val croppedImageFilePath = result.getUriFilePath(this)
+            val croppedImageFilePath = result.getUriFilePath(requireActivity())
             Log.e(TAG, "croppedImageUri: $croppedImageUri")
             Log.e(TAG, "croppedImageFilePath: $croppedImageFilePath")
             binding.imagePreview.setImageURI(croppedImageUri)

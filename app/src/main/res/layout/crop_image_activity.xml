@@ -27,10 +27,12 @@
 
     <com.q3tech.imagecropper.cropper.CropImageView
         android:id="@+id/cropImageView"
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginTop="12dp"
         app:cropShowCropOverlay="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rotate_left_button" />
 
     <!-- the preview -->
@@ -48,10 +50,10 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imagePreview"
         android:layout_width="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_height="200dp"
         android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/preview_header_tv" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
