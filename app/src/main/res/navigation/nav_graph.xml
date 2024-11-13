@@ -9,5 +9,14 @@
         android:id="@+id/mainFragment"
         android:name="com.q3tech.imagecropper.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_brightnessControlFragment"
+            app:destination="@id/brightnessControlFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/brightnessControlFragment"
+        android:name="com.q3tech.imagecropper.BrightnessControlFragment"
+        android:label="fragment_brightness_control"
+        tools:layout="@layout/fragment_brightness_control" />
 </navigation>

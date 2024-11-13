@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.q3tech.imagecropper.cropper.CropImageContract
 import com.q3tech.imagecropper.cropper.CropImageContractOptions
 import com.q3tech.imagecropper.cropper.CropImageOptions
@@ -33,6 +34,10 @@ class MainFragment : Fragment() {
         binding.pickImageButton.setOnClickListener {
             startOpsFromLib()
         }
+
+        binding.nextButton.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_brightnessControlFragment)
+        }
     }
 
     private fun startOpsFromLib() {
@@ -40,10 +45,10 @@ class MainFragment : Fragment() {
             CropImageContractOptions(
                 cropImageOptions = CropImageOptions(
                     guidelines = CropImageView.Guidelines.ON,
-                    minCropResultWidth = 450,
+                    /*minCropResultWidth = 450,
                     minCropResultHeight = 650,
                     maxCropResultWidth = 900,
-                    maxCropResultHeight = 1300,
+                    maxCropResultHeight = 1300,*/
                     cropShape = CropImageView.CropShape.OVAL,
                     showCropLabel = true,
                     showCropOverlay = true,
